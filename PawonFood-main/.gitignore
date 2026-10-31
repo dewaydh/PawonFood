@@ -1,0 +1,35 @@
+# Generated caches and local tooling
+.fallow/
+.vscode/
+.idea/
+.DS_Store
+
+# Secrets
+.env
+.env.*
+*.jks
+*.keystore
+key.properties
+google-services.json
+GoogleService-Info.plist
+
+# Third-party tooling
+stop-slop/
+skills-lock.json
+
+# Backups of the old root history and the old app repository (GitHub Flanzy-dev/PawonFood, archived)
+.git-old-backup/
+.git-app-backup/
+
+# Generated renders
+render/out/
+
+# Local only: source material, render engine, tools, landing page and AI-assistant files
+reference/
+render/
+tools/
+web/
+.claude/
+.agents/
+CLAUDE.md
+.mcp.json
