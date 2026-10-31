@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/data/settings_repository.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/phone_frame_preview.dart';
 import 'router.dart';
 
 class PawonApp extends ConsumerWidget {
@@ -27,14 +28,16 @@ class PawonApp extends ConsumerWidget {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         AppColors.isDark = isDark;
 
-        return MediaQuery(
-          data: media.copyWith(
-            textScaler: effectiveScaler,
-            disableAnimations: settings.reducedMotion || media.disableAnimations,
-          ),
-          child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: (isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(statusBarColor: Colors.transparent),
-            child: child!,
+        return PhoneFramePreview(
+          child: MediaQuery(
+            data: media.copyWith(
+              textScaler: effectiveScaler,
+              disableAnimations: settings.reducedMotion || media.disableAnimations,
+            ),
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: (isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(statusBarColor: Colors.transparent),
+              child: child!,
+            ),
           ),
         );
       },

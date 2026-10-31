@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -414,7 +415,11 @@ class _ShareFormScreenState extends ConsumerState<ShareFormScreen> {
                             height: 80,
                             child: capture == null
                                 ? const ColoredBox(color: AppColors.foodWarm)
-                                : Image.file(File(capture.photoPath), fit: BoxFit.cover, cacheWidth: 240, errorBuilder: (_, _, _) => const ColoredBox(color: AppColors.foodWarm)),
+                                : kIsWeb
+                                    ? (capture.photoPath.startsWith('http') || capture.photoPath.startsWith('blob:') || capture.photoPath.startsWith('data:')
+                                        ? Image.network(capture.photoPath, fit: BoxFit.cover, errorBuilder: (_, _, _) => const ColoredBox(color: AppColors.foodWarm))
+                                        : const ColoredBox(color: AppColors.foodWarm))
+                                    : Image.file(File(capture.photoPath), fit: BoxFit.cover, cacheWidth: 240, errorBuilder: (_, _, _) => const ColoredBox(color: AppColors.foodWarm)),
                           ),
                         ),
                         const SizedBox(width: 12),

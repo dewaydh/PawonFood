@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/listing.dart';
@@ -19,9 +20,22 @@ class ListingPhoto extends StatelessWidget {
     final fallback = ColoredBox(color: AppColors.foodWarm, child: Center(child: Icon(Icons.restaurant, color: AppColors.background.withValues(alpha: 0.7))));
     final dpr = MediaQuery.devicePixelRatioOf(context);
     final cacheW = width == null ? null : (width! * dpr).round();
-    final Widget image = listing.localPhotoPath != null
-        ? Image.file(File(listing.localPhotoPath!), fit: BoxFit.cover, cacheWidth: cacheW, errorBuilder: (_, _, _) => fallback)
-        : Image.asset(listing.photo, fit: BoxFit.cover, cacheWidth: cacheW, errorBuilder: (_, _, _) => fallback);
+
+    final Widget image;
+    if (listing.localPhotoPath != null) {
+      if (kIsWeb) {
+        // On web, if the path is a blob/data/network URL use Image.network, else fallback/mock asset
+        final path = listing.localPhotoPath!;
+        image = path.startsWith('http') || path.startsWith('blob:') || path.startsWith('data:')
+            ? Image.network(path, fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback)
+            : Image.asset(listing.photo, fit: BoxFit.cover, cacheWidth: cacheW, errorBuilder: (_, _, _) => fallback);
+      } else {
+        image = Image.file(File(listing.localPhotoPath!), fit: BoxFit.cover, cacheWidth: cacheW, errorBuilder: (_, _, _) => fallback);
+      }
+    } else {
+      image = Image.asset(listing.photo, fit: BoxFit.cover, cacheWidth: cacheW, errorBuilder: (_, _, _) => fallback);
+    }
+
     return ClipRRect(borderRadius: BorderRadius.circular(radius), child: SizedBox(width: width, height: height, child: image));
   }
 }

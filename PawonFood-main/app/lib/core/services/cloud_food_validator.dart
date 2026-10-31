@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/enums.dart';
@@ -18,7 +19,8 @@ class CloudFoodValidator implements FoodValidator {
     this.timeout = const Duration(seconds: 25),
     Future<List<int>> Function(String path)? readImage,
   })  : _client = client ?? http.Client(),
-        _readImage = readImage ?? ((path) => File(path).readAsBytes());
+        _readImage = readImage ??
+            (kIsWeb ? ((path) async => <int>[]) : ((path) => File(path).readAsBytes()));
 
   /// Builds the validator from `--dart-define=PAWON_VALIDATOR_URL=https://host` (base URL of app/server).
   factory CloudFoodValidator.fromBaseUrl(String baseUrl, {String clientToken = ''}) {

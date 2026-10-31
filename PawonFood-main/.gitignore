@@ -28,7 +28,8 @@ render/out/
 reference/
 render/
 tools/
-web/
+/web/
+!app/web/
 .claude/
 .agents/
 CLAUDE.md
